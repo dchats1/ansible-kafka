@@ -1,2 +1,4 @@
 ---
-# handlers file for kafka
+- name: daemon-reload
+  systemd:
+    daemon-reload: yes

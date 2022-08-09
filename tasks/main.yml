@@ -1,2 +1,18 @@
 ---
-# tasks file for kafka
+- name: Create a symbolic link of tar to gtar
+  ansible.builtin.file:
+    src: /bin/tar
+    dest: /usr/bin/gtar
+    owner: root
+    group: root
+    state: link
+
+- name: Install required packages
+  ansible.builtin.dnf:
+    name: '{{ item }}'
+    state: present
+  loop:
+    - java-latest-openjdk
+    - unzip
+
+- include_tasks: zookeeper.yml
