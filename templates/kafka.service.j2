@@ -7,7 +7,7 @@ After=zookeeper.service
 [Service]    
 Type=forking
 WorkingDirectory=/opt/kafka
-ExecStart=/opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties
+ExecStart=/opt/kafka/bin/kafka-server-start.sh -daemon /opt/kafka/config/server.properties
 ExecStop=/opt/kafka/bin/kafka-server-stop.sh
 TimeoutSec=30
 Restart=on-failure
