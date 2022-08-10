@@ -1,0 +1,25 @@
+broker.id={{ zoo_id }}
+
+advertised.listeners=PLAINTEXT://{{ inventory_hostname }}:9092
+
+delete.topic.enable=true
+
+log.dirs=/data/kafka
+
+num.partitions=8
+
+default.replication.factor=3
+
+min.insync.replicas=2
+
+log.retention.hours=168
+
+log.segment.bytes=1073741824
+
+log.retention.check.interval.ms=300000
+
+zookeeper.connect={% for host in groups['kafka'] %}{%- if not loop.last %}{{ hostvars[host].inventory_hostname }}:2181,{%- else -%}{{ hostvars[host].inventory_hostname }}:2181{% endif %}{% endfor %}
+
+zookeeper.connection.timeout.ms=6000
+
+auto.create.topics.enable=true

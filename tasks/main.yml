@@ -16,3 +16,4 @@
     - unzip
 
 - include_tasks: zookeeper.yml
+- include_tasks: kafka.yml

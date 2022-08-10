@@ -1,0 +1,16 @@
+[Unit]
+Description=kafka
+Documentation=https://kafka.apache.org/
+Requires=zookeeper.service
+After=zookeeper.service
+
+[Service]    
+Type=forking
+WorkingDirectory=/opt/kafka
+ExecStart=/opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties
+ExecStop=/opt/kafka/bin/kafka-server-stop.sh
+TimeoutSec=30
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

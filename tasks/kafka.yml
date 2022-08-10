@@ -1,0 +1,56 @@
+---
+- name: Create Kafka Dir
+  ansible.builtin.file:
+    path: /opt/kafka
+    state: directory
+    mode: '0755'
+
+- name: Get Kafka Binaries
+  ansible.builtin.unarchive:
+    src: '{{ kafka_package }}'
+    dest: /opt/kafka
+    remote_src: yes
+    owner: root
+    group: root
+    extra_opts:
+      - "--exclude=kafka_2.13-{{ kafka_version }}config/server.properties"
+      - "--strip-components=1"
+
+- name: Create Kafka Data Dir
+  ansible.builtin.file:
+    path: /data/zookeeper
+    state: directory
+    mode: '0755'
+
+- name: Set Kafka Config
+  ansible.builtin.template:
+    src: server.properties.j2
+    dest: /opt/kafka/config/server.properties
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Set Kafka Systemd Unit File
+  ansible.builtin.template:
+    src: kafka.service.j2
+    dest: /etc/systemd/system/kafka.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - daemon-reload
+
+- name: Open Kafka firewall ports
+  ansible.posix.firewalld:
+    port: '{{ item }}'
+    permanent: yes
+    immediate: yes
+    state: enabled
+  loop:
+    - 9092/tcp
+
+- name: Start and Enable Kafka
+  ansible.builtin.systemd:
+    name: kafka
+    state: started
+    enabled: yes
